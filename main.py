@@ -36,8 +36,6 @@ customer_server = StringVar()
 combobox_customer_name = ttk.Combobox(main_frame, textvariable=customer_name, height=150, width=400)
 combobox_customer_name["values"] = customer_name_list
 
-
-
 def check_license ():
     global customer_name, customer_port, customer_license_GUID, customer_database, customer_server
 
@@ -135,7 +133,7 @@ accept_button = ttk.Button(main_frame, text="Submit customer", command=check_lic
 
 change_button = ttk.Button(main_frame, text="View license", command=select_license)
 
-# start_button = ttk.Button(main_frame, text="Start", command=start_program)
+start_button = ttk.Button(main_frame, text="Start", command=start_program)
 
 label_first_row.pack()
 combobox_customer_name.pack()
@@ -151,35 +149,6 @@ customer_port_label.pack()
 customer_support_GUID_label.pack()
 customer_server_label.pack()
 
-# start_button.pack()
+start_button.pack()
 
-# print(df_excel)
 root.mainloop()
-
-
-
-# try:    
-#     conn = pyodbc.connect(conn_str_db)
-#     print("Connected to SQL Server")
-
-#     cursor = conn.cursor()
-#     comp_id = 0
-#     cursor.execute(query2)
-#     result = cursor.fetchall()
-#     print(result)
-#     result = result[0]
-#     for i in result:
-#         if i >= 2:
-#             cursor.execute(query3)
-#             comp_id = cursor.fetchall()
-#             print(comp_id)
-#             query4 = f"update {customer_database}.dbo.Computer set SecurityProfileGUID = NULL where computerId in ({comp_id[0][0]})"
-#             cursor.execute(query4)
-#             cursor.commit()
-
-#         if i < 2:
-#             startfile()
-
-
-# except Exception as e:
-#     print("ERROR:", e)
