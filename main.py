@@ -5,6 +5,7 @@ import pandas as pd
 from dotenv import load_dotenv
 from os import getenv, startfile
 from lxml import etree
+from labelClass import CustomLabel, CustomRoot
 
 load_dotenv()
 conn_str_db = (
@@ -17,15 +18,17 @@ conn_str_db = (
     f"Encrypt={getenv('Encrypt')}"
 )
 
-df_excel = pd.read_excel("C:/Users/bohdan.kovba/Desktop/python_projects_for_de/Customer_Info_MK.xlsx", sheet_name=0, header=0)
+df_excel = pd.read_csv(
+    "https://docs.google.com/spreadsheets/d/1xyZRJS-K_Vrhf-_JmVbFJHu2C3LpBYET/export?format=csv&gid=2015338306"
+)
 customer_name_list = list(df_excel["Назва клініки"])
 
-root = Tk()
-root.geometry("500x500")
-root.title("Automatic license reset")
+root = CustomRoot()
 
 main_frame = ttk.Frame(root, padding=10, borderwidth=10)
-label_first_row = ttk.Label(main_frame, text='Automatic license reset\nPlease enter customer name in the field below')
+label_first_row = CustomLabel(main_frame, text='Автоматичне занулення ліцензії та запуск клієнта\n', font_size=14).pack()
+label_second_row = CustomLabel(main_frame, text='Почніть вносити назву замовника у полі нижче').pack()
+label_third_row = CustomLabel(main_frame, text='та виберіть із списку').pack()
 
 customer_name = StringVar()
 customer_port = StringVar()
@@ -40,19 +43,19 @@ def check_license ():
     global customer_name, customer_port, customer_license_GUID, customer_database, customer_server
 
     customer_name = combobox_customer_name.get()
-    customer_label['text'] = f'Customer Name: {customer_name}'
+    customer_label['text'] = f'Назва замовника: {customer_name}'
   
     customer_database = df_excel.loc[df_excel['Назва клініки'] == customer_name, 'Clinic DB'].iloc[0]
-    customer_database_label['text'] = f'Customer Database: {customer_database}'
+    customer_database_label['text'] = f'БД: {customer_database}'
 
     customer_port = df_excel.loc[df_excel['Назва клініки'] == customer_name, 'Port'].iloc[0]
-    customer_port_label['text'] = f'Customer Port: {customer_port}'
+    customer_port_label['text'] = f'Порт: {customer_port}'
 
     customer_license_GUID = df_excel.loc[df_excel['Назва клініки'] == customer_name, 'SecurityProfileGUID'].iloc[0]
-    customer_support_GUID_label['text'] = f'Customer Support GUID: {customer_license_GUID}'
+    customer_support_GUID_label['text'] = f'SecurityProfileGUID: {customer_license_GUID}'
 
     customer_server = df_excel.loc[df_excel['Назва клініки'] == customer_name, 'ServerName'].iloc[0]    
-    customer_server_label['text'] = f'Customer Server: {customer_server}'
+    customer_server_label['text'] = f'Сервер: {customer_server}'
 
 
 def update (event):
@@ -122,20 +125,19 @@ def start_program():
 
     startfile("C:/Users/bohdan.kovba/Desktop/Important/Client/Client/Doctor Eleks.exe")
 
-customer_label = ttk.Label(root)
-customer_database_label = ttk.Label(root)
-customer_port_label = ttk.Label(root)
-customer_support_GUID_label = ttk.Label(root)
-customer_server_label = ttk.Label(root)
+customer_label = CustomLabel(root, text="Назва замовника:")
+customer_database_label = CustomLabel(root, text="БД:")
+customer_port_label = CustomLabel(root, text="Порт:")
+customer_support_GUID_label = CustomLabel(root, text="SecurityProfileGUID:")
+customer_server_label = CustomLabel(root, text="Сервер:")
 
 combobox_customer_name.bind("<KeyRelease>", update)
-accept_button = ttk.Button(main_frame, text="Submit customer", command=check_license)
+accept_button = ttk.Button(root, text="Вибрати замовника", command=check_license)
 
-change_button = ttk.Button(main_frame, text="View license", command=select_license)
+change_button = ttk.Button(root, text="Затвердити", command=select_license)
 
-start_button = ttk.Button(main_frame, text="Start", command=start_program)
+start_button = ttk.Button(root, text="Запуск клієнта", command=start_program)
 
-label_first_row.pack()
 combobox_customer_name.pack()
 
 main_frame.pack()
